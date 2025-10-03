@@ -1,5 +1,40 @@
 def carica_da_file(file_path):
     """Carica i libri dal file"""
+    try:
+        with open(file_path, "r", encoding="utf-8") as file:
+            lines = file.readlines()
+
+        # La prima riga contiene il numero di sezioni
+        num_sezioni = int(lines[0].strip())
+
+        # Creiamo una struttura dati: lista di liste, dove ogni sottolista rappresenta una sezione
+        biblioteca = [[] for _ in range(num_sezioni)]
+
+        # Processiamo le righe successive (dalla seconda in poi)
+        for line in lines[1:]:
+            line = line.strip()
+            if line:  # Salta righe vuote
+                titolo, autore, anno, pagine, sezione = line.split(',')
+                libro = {
+                    'titolo': titolo,
+                    'autore': autore,
+                    'anno': int(anno),
+                    'pagine': int(pagine),
+                    'sezione': int(sezione)
+                }
+
+                # Aggiungiamo il libro alla sezione corretta (sezione-1 perché gli indici partono da 0)
+                if 1 <= int(sezione) <= num_sezioni:
+                    biblioteca[int(sezione) - 1].append(libro)
+
+        return biblioteca
+
+    except FileNotFoundError:
+        print("Errore: File non trovato.")
+        return None
+    except Exception as e:
+        print(f"Errore durante il caricamento: {e}")
+        return None
     # TODO
 
 
